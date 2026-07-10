@@ -26,7 +26,9 @@ const ALLOWED_MODELS = new Set([
   "claude-sonnet-5",
 ]);
 // Hard ceiling on output tokens regardless of what the client asks for.
-const MAX_OUTPUT_TOKENS = 4096;
+// 10,000 covers Stage 2's bounded thinking budget (2,000) plus a full
+// Sunday sequence + several one-pagers (~4,000 observed) with headroom.
+const MAX_OUTPUT_TOKENS = 10_000;
 // Coarse rate limit: requests per window, per warm serverless instance. Not a
 // global limiter (serverless is multi-instance), just a cheap abuse brake.
 const RATE_LIMIT = 20;

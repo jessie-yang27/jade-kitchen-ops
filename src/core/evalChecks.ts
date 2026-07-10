@@ -8,6 +8,12 @@
 // lists, so prompt and eval stay in lockstep.
 
 import type { Dish, OpsPlan, SequenceTask, WeeklyDrop } from "../domain/types";
+import {
+  COOK_VERBS,
+  PACKAGE_KEYWORD_PATTERN,
+  PREP_VERBS,
+  REFRIGERATE_KEYWORD_PATTERN,
+} from "./taskConventions";
 
 export type EvalCheckId =
   | "window-fit"
@@ -42,9 +48,6 @@ export function toMinutes(time: string): number | null {
   if (hours > 23 || minutes > 59) return null;
   return hours * 60 + minutes;
 }
-
-const PREP_VERBS = /^(prep|wash|chop|cut|dice|slice|julienne|mince|soak|marinate|measure|set up|setup|portion ingredients|trim|peel)/i;
-const COOK_VERBS = /^(cook|boil|stir-fry|stir fry|braise|simmer|fry|steam|saute|sauté|glaze|package|assemble)/i;
 
 export type TaskKind = "prep" | "cook" | "other";
 
@@ -186,8 +189,8 @@ export function checkBoxContiguity(plan: OpsPlan): EvalResult {
  */
 export function checkRefrigeration(plan: OpsPlan): EvalResult {
   const failures: string[] = [];
-  const isPackage = (task: SequenceTask) => /packag/i.test(task.task);
-  const isRefrigerate = (task: SequenceTask) => /refrigerat|chill|cool/i.test(task.task);
+  const isPackage = (task: SequenceTask) => PACKAGE_KEYWORD_PATTERN.test(task.task);
+  const isRefrigerate = (task: SequenceTask) => REFRIGERATE_KEYWORD_PATTERN.test(task.task);
 
   for (const box of ["A", "B"] as const) {
     const packs = plan.sundaySequence.filter((t) => isPackage(t) && (t.box === box || t.box === "shared"));

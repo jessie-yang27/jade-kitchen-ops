@@ -12,6 +12,15 @@ export type MessagesRequest = {
   system?: string;
   messages: ChatMessage[];
   temperature?: number;
+  /**
+   * Extended thinking is on by default for reasoning-capable models and, if
+   * left unset, can consume the entire max_tokens budget on a "thinking"
+   * block before any visible text is produced (see LEARNINGS #3). For calls
+   * that benefit from reasoning, pass an explicit `budget_tokens` well below
+   * `max_tokens` so there's always room left for the actual answer. Pass
+   * `{ type: "disabled" }` only for simple calls that don't need reasoning.
+   */
+  thinking?: { type: "enabled"; budget_tokens: number } | { type: "disabled" };
 };
 
 type ContentBlock = { type: "text"; text: string } | { type: string };
