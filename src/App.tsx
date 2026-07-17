@@ -1,122 +1,117 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useMemo, useRef, useState } from "react";
+import "./App.css";
+import { MockKlaviyoAdapter } from "./adapters/mockKlaviyo";
+import { MockShopifyAdapter } from "./adapters/mockShopify";
+import { DropConfigCard } from "./components/DropConfigCard";
+import { Stage1Card, type LaunchLogEntry } from "./components/Stage1Card";
+import { Stage2Card } from "./components/Stage2Card";
+import { Stage3Card } from "./components/Stage3Card";
+import { Stage4Card } from "./components/Stage4Card";
+import { countBoxServings } from "./core/grocery";
+import { segmentCounts, segmentOrders } from "./core/segmentation";
+import { dishById, dishes } from "./data/dishes";
+import { inventory } from "./data/inventory";
+import { mockOrders } from "./data/mockOrders";
+import { availableResources } from "./data/resources";
+import { roster } from "./data/roster";
+import type { WeeklyDrop } from "./domain/types";
+
+const initialDrop: WeeklyDrop = {
+  weekOf: "2026-07-13",
+  boxA: { meat1: "lu-rou-fan", meat2: "mapo-tofu", veggie: "bok-choy", rice: "brown-rice" },
+  boxB: {
+    meat1: "beef-with-peppers",
+    meat2: "soy-glazed-chicken",
+    veggie: "sichuan-green-beans",
+    rice: "white-rice",
+  },
+  orderCap: 40,
+  priceA: 18,
+  priceB: 18,
+  status: "draft",
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [drop, setDrop] = useState<WeeklyDrop>(initialDrop);
+  const [launching, setLaunching] = useState(false);
+  const [launchLog, setLaunchLog] = useState<LaunchLogEntry[]>([]);
+  const [productIds, setProductIds] = useState<{ A: string; B: string } | null>(null);
+
+  const shopify = useRef(new MockShopifyAdapter()).current;
+  const klaviyo = useRef(new MockKlaviyoAdapter()).current;
+
+  const orders = mockOrders;
+  const boxCounts = useMemo(() => countBoxServings(orders), [orders]);
+  const segments = useMemo(() => segmentOrders(orders), [orders]);
+  const counts = useMemo(() => segmentCounts(segments), [segments]);
+
+  async function handleLaunch() {
+    setLaunching(true);
+    const log: LaunchLogEntry[] = [];
+    const push = (label: string) => {
+      log.push({ label, done: false });
+      setLaunchLog([...log]);
+    };
+    const finish = () => {
+      log[log.length - 1]!.done = true;
+      setLaunchLog([...log]);
+    };
+
+    push("Unpublish last week's products");
+    const active = await shopify.getActiveProducts();
+    await Promise.all(active.map((p) => shopify.unpublishProduct(p.id)));
+    finish();
+
+    push("Create this week's Box A / Box B products");
+    const { productIdA, productIdB } = await shopify.createProduct(drop);
+    finish();
+
+    push(`Set inventory cap to ${drop.orderCap} per box`);
+    await Promise.all([
+      shopify.setInventoryCap(productIdA, drop.orderCap),
+      shopify.setInventoryCap(productIdB, drop.orderCap),
+    ]);
+    finish();
+
+    setProductIds({ A: productIdA, B: productIdB });
+    setDrop((d) => ({ ...d, status: "launched" }));
+    setLaunching(false);
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="app">
+      <header className="app-header">
+        <h1>Jade Kitchen Weekly Ops</h1>
+        <p className="app-subtitle">
+          One Monday input → the whole week's launch, ops plan, customer sync, and comms.
+        </p>
+      </header>
 
-      <div className="ticks"></div>
+      <DropConfigCard
+        drop={drop}
+        dishes={dishes}
+        orderCount={orders.length}
+        onChange={setDrop}
+        onLaunch={handleLaunch}
+        launching={launching}
+      />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      <Stage1Card drop={drop} log={launchLog} />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      <Stage2Card
+        drop={drop}
+        boxCounts={boxCounts}
+        dishById={dishById}
+        inventory={inventory}
+        roster={roster}
+        availableResources={availableResources}
+      />
+
+      <Stage3Card orders={orders} segments={segments} counts={counts} klaviyo={klaviyo} />
+
+      <Stage4Card orders={orders} klaviyo={klaviyo} shopify={shopify} productIds={productIds} />
+    </div>
+  );
 }
 
-export default App
+export default App;
