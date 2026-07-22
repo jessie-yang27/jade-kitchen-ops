@@ -1,31 +1,54 @@
 .app {
-  max-width: 900px;
+  max-width: 880px;
   margin: 0 auto;
-  padding: 32px 24px 80px;
+  padding: 48px 24px 100px;
   text-align: left;
 }
 
 .app-header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 }
 
 .app-subtitle {
   color: var(--text);
-  margin-top: 8px;
+  margin-top: 10px;
+  font-size: 16px;
 }
+
+/* --- cards ---------------------------------------------------------------- */
 
 .card {
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
+  border-radius: var(--radius);
+  padding: 28px;
   margin-bottom: 20px;
-  background: var(--bg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-primary {
+  border-color: var(--accent-border);
 }
 
 .card-emphasized {
   border-color: var(--accent-border);
   box-shadow: var(--shadow);
+  position: relative;
+}
+
+.card-emphasized::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  padding: 1px;
+  background: linear-gradient(135deg, var(--accent), transparent 60%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.5;
 }
 
 .card-header {
@@ -33,33 +56,35 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .day-tag {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
   color: var(--accent);
   background: var(--accent-bg);
-  border-radius: 6px;
-  padding: 2px 8px;
-  margin-left: 8px;
+  border-radius: 999px;
+  padding: 3px 10px;
+  margin-left: 10px;
   vertical-align: middle;
+  letter-spacing: 0.02em;
 }
 
 .mock-badge {
-  font-size: 11px;
-  letter-spacing: 0.06em;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text);
   border: 1px solid var(--border);
   border-radius: 999px;
-  padding: 3px 10px;
+  padding: 4px 10px;
 }
 
 .hint {
   color: var(--text);
-  font-size: 15px;
+  font-size: 14px;
 }
 
 /* --- drop config ------------------------------------------------------- */
@@ -67,51 +92,95 @@
 .box-builders {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin: 16px 0;
+  gap: 28px;
+  margin: 20px 0;
+}
+
+.box-builder h3 {
+  color: var(--accent);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .box-builder label,
 .drop-controls label {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  font-size: 14px;
-  margin-bottom: 10px;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 12px;
 }
 
 .box-builder select,
-.drop-controls input[type="number"] {
+.drop-controls input[type="number"],
+.form-grid input,
+.form-grid select,
+.ingredient-row input,
+.ingredient-row select,
+.step-row input {
   font: inherit;
-  padding: 6px 8px;
+  font-size: 14px;
+  padding: 8px 10px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: var(--bg);
   color: var(--text-h);
+  transition: border-color 0.15s;
+}
+
+.box-builder select:focus,
+.drop-controls input:focus,
+.form-grid input:focus,
+.form-grid select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.box-builder select:disabled,
+.drop-controls input:disabled {
+  opacity: 0.6;
 }
 
 .drop-controls {
   display: flex;
-  gap: 24px;
+  gap: 28px;
   flex-wrap: wrap;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
+}
+
+input[type="range"] {
+  accent-color: var(--accent);
 }
 
 /* --- buttons ------------------------------------------------------------ */
 
 button {
   font: inherit;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 10px 18px;
-  background: var(--bg);
+  background: var(--surface);
   color: var(--text-h);
+  transition: background 0.15s, border-color 0.15s, transform 0.05s;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--accent-border);
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 button:disabled {
   cursor: default;
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
 button.primary {
@@ -120,10 +189,52 @@ button.primary {
   color: white;
 }
 
+button.primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
 button.primary:disabled {
   background: var(--accent-bg);
   color: var(--accent);
   border-color: var(--accent-border);
+}
+
+button.danger {
+  color: var(--danger);
+  border-color: var(--danger-bg);
+}
+
+button.danger:hover:not(:disabled) {
+  background: var(--danger-bg);
+  border-color: var(--danger);
+}
+
+button.icon-button {
+  border: none;
+  background: transparent;
+  padding: 4px 8px;
+  font-size: 13px;
+  color: var(--text);
+}
+
+button.icon-button:hover {
+  color: var(--danger);
+}
+
+button.link-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--accent);
+}
+
+button.link-button:hover {
+  text-decoration: underline;
 }
 
 /* --- checklist / stage 1 ------------------------------------------------ */
@@ -135,11 +246,8 @@ button.primary:disabled {
 }
 
 .checklist li {
-  padding: 4px 0;
-  font-size: 15px;
-}
-
-.checklist li.done {
+  padding: 5px 0;
+  font-size: 14px;
   color: var(--text-h);
 }
 
@@ -149,16 +257,15 @@ button.primary:disabled {
 
 .placeholder-note {
   border-top: 1px dashed var(--border);
-  padding-top: 12px;
-  margin-top: 12px;
+  padding-top: 14px;
+  margin-top: 14px;
 }
 
 /* --- stage 2 grocery + plan ---------------------------------------------- */
 
 .grocery-section h4 {
   text-transform: capitalize;
-  margin: 12px 0 4px;
-  font-size: 15px;
+  margin: 16px 0 6px;
 }
 
 .grocery-table {
@@ -168,56 +275,74 @@ button.primary:disabled {
 }
 
 .grocery-table td {
-  padding: 3px 0;
+  padding: 4px 0;
+  color: var(--text-h);
 }
 
 .eval-pills {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 16px 0;
+  margin: 18px 0;
 }
 
 .eval-pill {
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: 500;
   border-radius: 999px;
-  padding: 4px 12px;
+  padding: 5px 12px;
   border: 1px solid var(--border);
 }
 
 .eval-pill.pass {
-  color: #1a7f37;
-  border-color: #1a7f3766;
-  background: #1a7f3714;
+  color: var(--success);
+  border-color: var(--success-bg);
+  background: var(--success-bg);
 }
 
 .eval-pill.fail {
-  color: #cf222e;
-  border-color: #cf222e66;
-  background: #cf222e14;
+  color: var(--danger);
+  border-color: var(--danger-bg);
+  background: var(--danger-bg);
 }
 
 .warning {
-  color: #cf222e;
+  color: var(--danger);
   font-weight: 500;
+  font-size: 14px;
 }
 
 .error {
-  color: #cf222e;
+  color: var(--danger);
+  font-size: 14px;
 }
 
 .sequence-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
-  margin: 8px 0 16px;
+  font-size: 13px;
+  margin: 10px 0 18px;
 }
 
-.sequence-table th,
+.sequence-table th {
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
 .sequence-table td {
   text-align: left;
-  padding: 6px 8px;
+  padding: 8px 10px;
   border-bottom: 1px solid var(--border);
+  color: var(--text-h);
+}
+
+.sequence-table tr:hover td {
+  background: var(--accent-bg);
 }
 
 /* --- stage 3 metrics ------------------------------------------------------ */
@@ -226,24 +351,26 @@ button.primary:disabled {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 12px;
-  margin: 16px 0;
+  margin: 18px 0;
 }
 
 .metric {
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px;
+  border-radius: var(--radius-sm);
+  padding: 14px;
   text-align: center;
+  background: var(--bg);
 }
 
 .metric strong {
   display: block;
-  font-size: 24px;
+  font-size: 26px;
   color: var(--text-h);
+  font-weight: 700;
 }
 
 .metric span {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text);
 }
 
@@ -251,27 +378,211 @@ button.primary:disabled {
 
 .template-preview {
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
   margin-bottom: 8px;
+}
+
+.template-preview summary {
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-h);
 }
 
 .template-preview pre {
   white-space: pre-wrap;
   font-family: var(--sans);
-  font-size: 14px;
-  margin: 8px 0 0;
+  font-size: 13px;
+  margin: 10px 0 0;
+  color: var(--text);
 }
 
 .stage4-actions {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-top: 16px;
+  margin-top: 18px;
   flex-wrap: wrap;
 }
 
 .draft-only-badge {
+  font-size: 12px;
+  color: var(--text);
+}
+
+/* --- dish library ----------------------------------------------------------- */
+
+.dish-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-top: 16px;
+}
+
+.dish-column h3 {
+  color: var(--accent);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dish-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+}
+
+.dish-name-button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.dish-name-button:hover {
+  background: var(--accent-bg);
+  border-color: transparent;
+}
+
+/* --- modal -------------------------------------------------------------- */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 14, 0.5);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 20px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 28px;
+  width: 100%;
+  max-width: 560px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.modal-header h3 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.name-zh {
+  color: var(--text);
+  font-weight: 400;
+}
+
+.recipe-list {
+  margin: 0 0 4px;
+  padding-left: 20px;
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.recipe-list li {
+  padding: 2px 0;
+}
+
+.dish-notes {
+  font-size: 14px;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+  margin-top: 8px;
+}
+
+.form-grid label,
+.modal textarea {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.form-grid .span-2 {
+  grid-column: 1 / -1;
+}
+
+.modal textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text-h);
+  resize: vertical;
+}
+
+.checkbox-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 14px 0 4px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-h);
+}
+
+.checkbox-label input {
+  accent-color: var(--accent);
+}
+
+.ingredient-row {
+  display: grid;
+  grid-template-columns: 1.4fr 0.7fr 0.8fr 0.9fr auto;
+  gap: 8px;
+  margin-bottom: 6px;
+  align-items: center;
+}
+
+.step-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  margin-bottom: 6px;
+  align-items: center;
+}
+
+.step-num {
   font-size: 13px;
   color: var(--text);
 }

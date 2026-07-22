@@ -34,6 +34,8 @@ export type Dish = {
   resources: DishResource[];
   /** Data provenance: "transcribed" = real Master Recipes values; "stubbed" = replace with real data. */
   ratioSource: "transcribed" | "stubbed";
+  /** Freeform reference text (e.g. pasted from a blog) — not parsed into structured fields. */
+  notes?: string;
 };
 
 export type BoxConfig = {

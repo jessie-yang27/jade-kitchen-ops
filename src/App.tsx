@@ -1,7 +1,8 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 import { MockKlaviyoAdapter } from "./adapters/mockKlaviyo";
 import { MockShopifyAdapter } from "./adapters/mockShopify";
+import { DishLibraryCard } from "./components/DishLibraryCard";
 import { DropConfigCard } from "./components/DropConfigCard";
 import { Stage1Card, type LaunchLogEntry } from "./components/Stage1Card";
 import { Stage2Card } from "./components/Stage2Card";
@@ -9,22 +10,17 @@ import { Stage3Card } from "./components/Stage3Card";
 import { Stage4Card } from "./components/Stage4Card";
 import { countBoxServings } from "./core/grocery";
 import { segmentCounts, segmentOrders } from "./core/segmentation";
-import { dishById, dishes } from "./data/dishes";
+import { loadDishes, saveDishes } from "./data/dishStorage";
 import { inventory } from "./data/inventory";
 import { mockOrders } from "./data/mockOrders";
 import { availableResources } from "./data/resources";
 import { roster } from "./data/roster";
-import type { WeeklyDrop } from "./domain/types";
+import type { Dish, WeeklyDrop } from "./domain/types";
 
 const initialDrop: WeeklyDrop = {
   weekOf: "2026-07-13",
-  boxA: { meat1: "lu-rou-fan", meat2: "mapo-tofu", veggie: "bok-choy", rice: "brown-rice" },
-  boxB: {
-    meat1: "beef-with-peppers",
-    meat2: "soy-glazed-chicken",
-    veggie: "sichuan-green-beans",
-    rice: "white-rice",
-  },
+  boxA: { meat1: "", meat2: "", veggie: "", rice: "" },
+  boxB: { meat1: "", meat2: "", veggie: "", rice: "" },
   orderCap: 40,
   priceA: 18,
   priceB: 18,
@@ -36,9 +32,24 @@ function App() {
   const [launching, setLaunching] = useState(false);
   const [launchLog, setLaunchLog] = useState<LaunchLogEntry[]>([]);
   const [productIds, setProductIds] = useState<{ A: string; B: string } | null>(null);
+  const [dishes, setDishes] = useState<Dish[]>(() => loadDishes());
 
   const shopify = useRef(new MockShopifyAdapter()).current;
   const klaviyo = useRef(new MockKlaviyoAdapter()).current;
+
+  useEffect(() => saveDishes(dishes), [dishes]);
+
+  const dishById = useMemo(() => new Map(dishes.map((d) => [d.id, d])), [dishes]);
+
+  function handleSaveDish(dish: Dish) {
+    setDishes((prev) => {
+      const exists = prev.some((d) => d.id === dish.id);
+      return exists ? prev.map((d) => (d.id === dish.id ? dish : d)) : [...prev, dish];
+    });
+  }
+  function handleDeleteDish(id: string) {
+    setDishes((prev) => prev.filter((d) => d.id !== id));
+  }
 
   const orders = mockOrders;
   const boxCounts = useMemo(() => countBoxServings(orders), [orders]);
@@ -78,6 +89,8 @@ function App() {
     setLaunching(false);
   }
 
+  const launched = drop.status !== "draft";
+
   return (
     <div className="app">
       <header className="app-header">
@@ -96,20 +109,26 @@ function App() {
         launching={launching}
       />
 
-      <Stage1Card drop={drop} log={launchLog} />
+      <DishLibraryCard dishes={dishes} onSave={handleSaveDish} onDelete={handleDeleteDish} />
 
-      <Stage2Card
-        drop={drop}
-        boxCounts={boxCounts}
-        dishById={dishById}
-        inventory={inventory}
-        roster={roster}
-        availableResources={availableResources}
-      />
+      {launched && (
+        <>
+          <Stage1Card drop={drop} log={launchLog} />
 
-      <Stage3Card orders={orders} segments={segments} counts={counts} klaviyo={klaviyo} />
+          <Stage2Card
+            drop={drop}
+            boxCounts={boxCounts}
+            dishById={dishById}
+            inventory={inventory}
+            roster={roster}
+            availableResources={availableResources}
+          />
 
-      <Stage4Card orders={orders} klaviyo={klaviyo} shopify={shopify} productIds={productIds} />
+          <Stage3Card orders={orders} segments={segments} counts={counts} klaviyo={klaviyo} />
+
+          <Stage4Card orders={orders} klaviyo={klaviyo} shopify={shopify} productIds={productIds} />
+        </>
+      )}
     </div>
   );
 }
