@@ -59,18 +59,6 @@
   margin-bottom: 10px;
 }
 
-.day-tag {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border-radius: 999px;
-  padding: 3px 10px;
-  margin-left: 10px;
-  vertical-align: middle;
-  letter-spacing: 0.02em;
-}
-
 .mock-badge {
   font-size: 10px;
   font-weight: 600;
@@ -397,17 +385,106 @@ button.link-button:hover {
   color: var(--text);
 }
 
-.stage4-actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-top: 18px;
-  flex-wrap: wrap;
-}
-
 .draft-only-badge {
   font-size: 12px;
   color: var(--text);
+  display: block;
+  margin-top: 16px;
+}
+
+/* --- shopify product listings ------------------------------------------------ */
+
+.listing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin: 12px 0 20px;
+}
+
+.listing-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  background: var(--bg);
+}
+
+.listing-photo {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  margin-bottom: 10px;
+  background: var(--accent-bg);
+}
+
+.listing-photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--accent);
+  background: linear-gradient(135deg, var(--accent-bg), transparent);
+}
+
+.listing-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0 0 6px;
+}
+
+.listing-blurb {
+  font-size: 13px;
+  color: var(--text-h);
+  margin: 0 0 8px;
+}
+
+.listing-meta {
+  font-size: 12px;
+  color: var(--text);
+  margin: 0 0 8px;
+}
+
+.listing-fine-print {
+  font-size: 11px;
+  color: var(--text);
+  margin: 0 0 4px;
+  line-height: 1.4;
+}
+
+/* --- dish photo (recipe modal) ------------------------------------------------ */
+
+.dish-photo {
+  width: 100%;
+  max-width: 240px;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  margin: 12px 0;
+  background: var(--accent-bg);
+}
+
+.dish-photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--accent);
+  background: linear-gradient(135deg, var(--accent-bg), transparent);
+}
+
+.dish-blurb {
+  font-size: 14px;
+  color: var(--text-h);
+  margin: 0 0 12px;
+}
+
+/* --- cooking day prep categories ----------------------------------------------- */
+
+.prep-category {
+  margin-bottom: 12px;
 }
 
 /* --- dish library ----------------------------------------------------------- */

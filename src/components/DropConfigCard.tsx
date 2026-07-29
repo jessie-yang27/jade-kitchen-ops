@@ -38,6 +38,16 @@ function BoxBuilder({
     <div className="box-builder">
       <h3>{label}</h3>
       <label>
+        Theme name (optional, e.g. "Mom's Classics")
+        <input
+          type="text"
+          value={box.themeName ?? ""}
+          disabled={disabled}
+          placeholder={label}
+          onChange={(e) => onChange({ ...box, themeName: e.target.value || undefined })}
+        />
+      </label>
+      <label>
         Meat 1
         <select
           value={box.meat1}

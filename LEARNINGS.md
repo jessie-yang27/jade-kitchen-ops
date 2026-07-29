@@ -71,3 +71,18 @@ reasons. See [src/ai/opsPlan.ts](./src/ai/opsPlan.ts). Confirmed with thinking
 fully disabled first (isolated the cause: valid JSON, ~3,900 output tokens),
 then re-enabled it bounded rather than shipping it off — losing the reasoning
 on the hardest part of the app wasn't the right trade for saving tokens.
+
+## 4. "JSON only, no code fences" isn't reliably followed (2026-07-22)
+
+**Problem:** Even with an explicit instruction not to, `claude-haiku-4-5` wrapped
+its JSON response in ` ```json ... ``` ` fences during a live test of the new
+menu-drop copy generator. A naive `JSON.parse(responseText(response))` would
+have thrown on real traffic despite passing every mocked test (mocks don't
+simulate this).
+
+**Fix:** [src/ai/campaignCopy.ts](./src/ai/campaignCopy.ts) strips fences
+defensively: if the trimmed response doesn't start with `{`, regex out the
+first `{...}` block before parsing. `opsPlan.ts`'s `extractJson()` already did
+this for Stage 2 — worth remembering this is a recurring model behavior, not
+a one-off, so any new JSON-output call should assume it needs the same guard
+rather than trusting the "no fences" instruction alone.

@@ -30,6 +30,8 @@ export type EmailCampaign = {
   orderDeadline: string;
   fulfillmentInfo: string;
   cta: string;
+  /** Full assembled email body, when the caller already composed one. */
+  body?: string;
 };
 
 export type SmsCampaign = {

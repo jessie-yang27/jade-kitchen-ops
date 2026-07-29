@@ -21,6 +21,8 @@ function blankDish(category: DishCategory): Dish {
     resources: [],
     ratioSource: "stubbed",
     notes: "",
+    blurb: "",
+    imageUrl: "",
   };
 }
 
@@ -110,6 +112,16 @@ export function DishModal({ dish, existingDishes, defaultCategory, onClose, onSa
               {draft.category} · {draft.cookMinutes} min
               {draft.allergens.length > 0 && ` · allergens: ${draft.allergens.join(", ")}`}
             </p>
+
+            {draft.imageUrl ? (
+              <img src={draft.imageUrl} alt={draft.name} className="dish-photo" />
+            ) : (
+              <div className="dish-photo dish-photo-placeholder" aria-hidden="true">
+                {draft.name.charAt(0) || "?"}
+              </div>
+            )}
+
+            {draft.blurb && <p className="dish-blurb">{draft.blurb}</p>}
 
             <h4>Ingredients</h4>
             <ul className="recipe-list">
@@ -234,6 +246,24 @@ export function DishModal({ dish, existingDishes, defaultCategory, onClose, onSa
                     }))
                   }
                   placeholder="soy, wheat, egg"
+                />
+              </label>
+              <label className="span-2">
+                Image URL (for the Shopify listing — pasted, not fetched)
+                <input
+                  type="text"
+                  value={draft.imageUrl ?? ""}
+                  onChange={(e) => setDraft((d) => ({ ...d, imageUrl: e.target.value || undefined }))}
+                  placeholder="https://…"
+                />
+              </label>
+              <label className="span-2">
+                Marketing blurb (for the Shopify listing)
+                <textarea
+                  rows={3}
+                  value={draft.blurb ?? ""}
+                  onChange={(e) => setDraft((d) => ({ ...d, blurb: e.target.value }))}
+                  placeholder="4 servings of our delicious…"
                 />
               </label>
             </div>

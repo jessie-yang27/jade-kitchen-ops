@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { BoxCounts } from "../core/grocery";
 import { buildGroceryList, diffAgainstInventory, groupBySection } from "../core/grocery";
+import { groupTasksByPrepCategory, PREP_CATEGORIES, PREP_CATEGORY_LABELS } from "../core/prepCategory";
 import type { Dish, ScheduleResource, WeeklyDrop } from "../domain/types";
 import type { InventoryItem } from "../data/inventory";
 import type { RosterMember } from "../data/roster";
@@ -16,7 +17,7 @@ type Props = {
   availableResources: Exclude<ScheduleResource, "none">[];
 };
 
-export function Stage2Card({ drop, boxCounts, dishById, inventory, roster, availableResources }: Props) {
+export function CookingDayCard({ drop, boxCounts, dishById, inventory, roster, availableResources }: Props) {
   const groceryList = useMemo(() => buildGroceryList(drop, boxCounts, dishById), [drop, boxCounts, dishById]);
   const groceryGroups = useMemo(
     () => groupBySection(diffAgainstInventory(groceryList.lines, inventory)),
@@ -43,19 +44,31 @@ export function Stage2Card({ drop, boxCounts, dishById, inventory, roster, avail
 
   const evalResults =
     result === null ? [] : result.status === "ok" ? result.evalResults : (result.attempts.at(-1)?.evalResults ?? []);
+  const grouped = result?.plan ? groupTasksByPrepCategory(result.plan.sundaySequence, dishById) : null;
 
   return (
     <section className="card card-emphasized">
       <div className="card-header">
-        <h2>
-          Stage 2 — Thursday ops plan <span className="day-tag">Thu</span>
-        </h2>
+        <h2>Cooking Day Prep</h2>
       </div>
       <p className="hint">
-        The AI centerpiece. Grocery quantities below are computed in code before the model ever sees them.
+        The AI centerpiece. Grocery quantities are computed in code before the model ever sees them, and its
+        schedule is graded by seven automated checks before it reaches this screen.
       </p>
 
-      <h3>Grocery list</h3>
+      <h4>Order summary</h4>
+      <div className="metric-cards">
+        <div className="metric">
+          <strong>{boxCounts.A}</strong>
+          <span>Box A</span>
+        </div>
+        <div className="metric">
+          <strong>{boxCounts.B}</strong>
+          <span>Box B</span>
+        </div>
+      </div>
+
+      <h4>Grocery list</h4>
       {groceryGroups.map((group) => (
         <div key={group.section} className="grocery-section">
           <h4>{group.section}</h4>
@@ -84,7 +97,7 @@ export function Stage2Card({ drop, boxCounts, dishById, inventory, roster, avail
       )}
 
       <button type="button" className="primary" onClick={handleGenerate} disabled={loading}>
-        {loading ? "Generating ops plan…" : "Generate ops plan (AI)"}
+        {loading ? "Generating cook-day plan…" : "Generate cook-day plan (AI)"}
       </button>
       {error && <p className="error">{error}</p>}
 
@@ -106,8 +119,8 @@ export function Stage2Card({ drop, boxCounts, dishById, inventory, roster, avail
 
           {result.plan && (
             <>
-              <h3>Saturday prep</h3>
-              <ul>
+              <h4>Night-before prep</h4>
+              <ul className="recipe-list">
                 {result.plan.saturdayPrep.map((item, i) => (
                   <li key={i}>
                     {item.task} — {item.dish} ({item.assignee}, ~{item.estMinutes} min)
@@ -115,31 +128,25 @@ export function Stage2Card({ drop, boxCounts, dishById, inventory, roster, avail
                 ))}
               </ul>
 
-              <h3>Sunday sequence</h3>
-              <table className="sequence-table">
-                <thead>
-                  <tr>
-                    <th>Time</th>
-                    <th>Task</th>
-                    <th>Box</th>
-                    <th>Assignee</th>
-                    <th>Resource</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {result.plan.sundaySequence.map((task) => (
-                    <tr key={task.id}>
-                      <td>{task.start}</td>
-                      <td>{task.task}</td>
-                      <td>{task.box}</td>
-                      <td>{task.assignee}</td>
-                      <td>{task.resource}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <h4>Cooking day instructions</h4>
+              {grouped &&
+                PREP_CATEGORIES.map((category) =>
+                  grouped[category].length === 0 ? null : (
+                    <div key={category} className="prep-category">
+                      <h4>{PREP_CATEGORY_LABELS[category]}</h4>
+                      <ul className="recipe-list">
+                        {grouped[category].map((task) => (
+                          <li key={task.id}>
+                            {task.start} — {task.task} ({task.assignee}
+                            {task.resource !== "none" ? `, ${task.resource}` : ""})
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ),
+                )}
 
-              <h3>Volunteer one-pagers</h3>
+              <h4>Volunteer one-pagers</h4>
               {result.plan.onePagers.map((page, i) => (
                 <details key={i}>
                   <summary>{page.station}</summary>

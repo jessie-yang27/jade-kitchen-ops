@@ -2,12 +2,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 import { MockKlaviyoAdapter } from "./adapters/mockKlaviyo";
 import { MockShopifyAdapter } from "./adapters/mockShopify";
+import { CookingDayCard } from "./components/CookingDayCard";
 import { DishLibraryCard } from "./components/DishLibraryCard";
 import { DropConfigCard } from "./components/DropConfigCard";
-import { Stage1Card, type LaunchLogEntry } from "./components/Stage1Card";
-import { Stage2Card } from "./components/Stage2Card";
-import { Stage3Card } from "./components/Stage3Card";
-import { Stage4Card } from "./components/Stage4Card";
+import { KlaviyoCard } from "./components/KlaviyoCard";
+import type { LaunchLogEntry } from "./components/launchTypes";
+import { ShopifyCard } from "./components/ShopifyCard";
 import { countBoxServings } from "./core/grocery";
 import { segmentCounts, segmentOrders } from "./core/segmentation";
 import { loadDishes, saveDishes } from "./data/dishStorage";
@@ -96,7 +96,7 @@ function App() {
       <header className="app-header">
         <h1>Jade Kitchen Weekly Ops</h1>
         <p className="app-subtitle">
-          One Monday input → the whole week's launch, ops plan, customer sync, and comms.
+          One Monday input → Shopify listings, Klaviyo campaigns, and the cook-day plan.
         </p>
       </header>
 
@@ -113,9 +113,25 @@ function App() {
 
       {launched && (
         <>
-          <Stage1Card drop={drop} log={launchLog} />
+          <ShopifyCard
+            drop={drop}
+            dishById={dishById}
+            log={launchLog}
+            productIds={productIds}
+            shopify={shopify}
+            onClosed={() => setDrop((d) => ({ ...d, status: "closed" }))}
+          />
 
-          <Stage2Card
+          <KlaviyoCard
+            drop={drop}
+            orders={orders}
+            segments={segments}
+            counts={counts}
+            dishById={dishById}
+            klaviyo={klaviyo}
+          />
+
+          <CookingDayCard
             drop={drop}
             boxCounts={boxCounts}
             dishById={dishById}
@@ -123,10 +139,6 @@ function App() {
             roster={roster}
             availableResources={availableResources}
           />
-
-          <Stage3Card orders={orders} segments={segments} counts={counts} klaviyo={klaviyo} />
-
-          <Stage4Card orders={orders} klaviyo={klaviyo} shopify={shopify} productIds={productIds} />
         </>
       )}
     </div>

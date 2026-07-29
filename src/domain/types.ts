@@ -36,6 +36,10 @@ export type Dish = {
   ratioSource: "transcribed" | "stubbed";
   /** Freeform reference text (e.g. pasted from a blog) — not parsed into structured fields. */
   notes?: string;
+  /** Marketing copy for the Shopify listing, e.g. "4 servings of our delicious..." Manually written, not AI-generated. */
+  blurb?: string;
+  /** Product photo for the Shopify listing. Pasted URL — no stock-photo lookup or generation is wired up. */
+  imageUrl?: string;
 };
 
 export type BoxConfig = {
@@ -43,6 +47,8 @@ export type BoxConfig = {
   meat2: string;
   veggie: string;
   rice: string;
+  /** Marketing name for the box, e.g. "Mom's Classics" — shown in Klaviyo copy instead of "Box A". */
+  themeName?: string;
 };
 
 export type WeeklyDrop = {

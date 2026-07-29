@@ -18,6 +18,9 @@ export const dishes: Dish[] = [
     nameZh: "卤肉饭",
     category: "meat",
     ratioSource: "transcribed", // Master Recipes "Lu rou fan" tab, 4-serving basis
+    // Real Shopify listing copy, transcribed verbatim.
+    blurb:
+      "4 servings of our delicious taiwanese braised meat! This is our #1 bestseller, and we make it with less fat than the traditional recipe, since we use ground pork and ground turkey, instead of pork belly.",
     ingredients: [
       { name: "Eggs (lu dan)", qtyPerServing: 1.5, unit: "ct", storeSection: "dairy" },
       { name: "Ground pork", qtyPerServing: 0.125, unit: "lb", storeSection: "meat" },
