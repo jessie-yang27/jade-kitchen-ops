@@ -17,10 +17,18 @@ import { availableResources } from "./data/resources";
 import { roster } from "./data/roster";
 import type { Dish, WeeklyDrop } from "./domain/types";
 
+// Preloaded so "Launch week" is immediately clickable for a demo — a real
+// user would still configure this themselves each week.
 const initialDrop: WeeklyDrop = {
   weekOf: "2026-07-13",
-  boxA: { meat1: "", meat2: "", veggie: "", rice: "" },
-  boxB: { meat1: "", meat2: "", veggie: "", rice: "" },
+  boxA: { meat1: "lu-rou-fan", meat2: "mapo-tofu", veggie: "bok-choy", rice: "brown-rice", themeName: "Mom's Classics" },
+  boxB: {
+    meat1: "beef-with-peppers",
+    meat2: "soy-glazed-chicken",
+    veggie: "sichuan-green-beans",
+    rice: "white-rice",
+    themeName: "Taste of Sichuan",
+  },
   orderCap: 40,
   priceA: 18,
   priceB: 18,
