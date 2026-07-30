@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Dish, WeeklyDrop } from "../domain/types";
+import { dishIconDataUri } from "../core/dishIcon";
 import { buildProductListing, listingDishIds } from "../core/productListing";
 import type { MockShopifyAdapter } from "../adapters/mockShopify";
 import { MockBadge } from "./MockBadge";
@@ -51,13 +52,11 @@ export function ShopifyCard({ drop, dishById, log, productIds, shopify, onClosed
           const listing = buildProductListing(dish);
           return (
             <div key={id} className="listing-card">
-              {listing.imageUrl ? (
-                <img src={listing.imageUrl} alt={dish.name} className="listing-photo" />
-              ) : (
-                <div className="listing-photo listing-photo-placeholder" aria-hidden="true">
-                  {dish.name.charAt(0)}
-                </div>
-              )}
+              <img
+                src={listing.imageUrl ?? dishIconDataUri(dish)}
+                alt={dish.name}
+                className="listing-photo"
+              />
               <h4 className="listing-title">{listing.title}</h4>
               {listing.blurb ? (
                 <p className="listing-blurb">{listing.blurb}</p>

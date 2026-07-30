@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Dish, DishCategory, DishResource, Ingredient, PrepNote, PrepTiming, StoreSection, Unit } from "../domain/types";
+import { dishIconDataUri } from "../core/dishIcon";
 import { generateDishId } from "../data/dishStorage";
 
 const CATEGORIES: DishCategory[] = ["meat", "veggie", "rice", "soup"];
@@ -113,12 +114,12 @@ export function DishModal({ dish, existingDishes, defaultCategory, onClose, onSa
               {draft.allergens.length > 0 && ` · allergens: ${draft.allergens.join(", ")}`}
             </p>
 
-            {draft.imageUrl ? (
-              <img src={draft.imageUrl} alt={draft.name} className="dish-photo" />
-            ) : (
-              <div className="dish-photo dish-photo-placeholder" aria-hidden="true">
-                {draft.name.charAt(0) || "?"}
-              </div>
+            {draft.id && (
+              <img
+                src={draft.imageUrl || dishIconDataUri(draft)}
+                alt={draft.name}
+                className="dish-photo"
+              />
             )}
 
             {draft.blurb && <p className="dish-blurb">{draft.blurb}</p>}

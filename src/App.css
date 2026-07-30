@@ -417,16 +417,6 @@ button.link-button:hover {
   background: var(--accent-bg);
 }
 
-.listing-photo-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 36px;
-  font-weight: 700;
-  color: var(--accent);
-  background: linear-gradient(135deg, var(--accent-bg), transparent);
-}
-
 .listing-title {
   font-size: 14px;
   font-weight: 600;
@@ -463,16 +453,6 @@ button.link-button:hover {
   object-fit: cover;
   margin: 12px 0;
   background: var(--accent-bg);
-}
-
-.dish-photo-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--accent);
-  background: linear-gradient(135deg, var(--accent-bg), transparent);
 }
 
 .dish-blurb {

@@ -63,6 +63,8 @@ export const dishes: Dish[] = [
     nameZh: "麻婆豆腐",
     category: "meat",
     ratioSource: "transcribed", // Master Recipes "Mapo Tofu" tab, 2-serving basis
+    blurb:
+      "4 servings of silky mapo tofu with just the right amount of heat! Ground pork, Sichuan peppercorn, and doubanjiang give it that classic numbing-spicy flavor, balanced by soft tofu that soaks up all the sauce.",
     ingredients: [
       { name: "Medium-firm tofu", qtyPerServing: 7, unit: "oz", storeSection: "dairy" },
       { name: "Ground pork", qtyPerServing: 3, unit: "oz", storeSection: "meat" },
@@ -96,6 +98,8 @@ export const dishes: Dish[] = [
     nameZh: "小椒牛肉",
     category: "meat",
     ratioSource: "transcribed", // Master Recipes "Beef with Peppers" tab, 4-serving basis
+    blurb:
+      "4 servings of tender stir-fried beef with longhorn peppers! Thin-sliced flank steak, marinated the traditional way, wok-tossed with garlic, ginger, and a touch of heat from fresh chili.",
     ingredients: [
       { name: "Flank steak", qtyPerServing: 3, unit: "oz", storeSection: "meat" },
       { name: "Longhorn peppers", qtyPerServing: 0.75, unit: "ct", storeSection: "produce" },
@@ -134,6 +138,8 @@ export const dishes: Dish[] = [
     // Meat/dry-rub amounts transcribed (2-serving basis); the glaze quantities
     // were cut off in the sheet export — verify against the real tab.
     ratioSource: "transcribed",
+    blurb:
+      "4 servings of crispy-skinned chicken thighs glazed in a sweet-savory soy sauce! Pan-seared until golden, then finished in a sticky glaze that coats every bite.",
     ingredients: [
       { name: "Chicken thigh (boneless, skinless)", qtyPerServing: 8, unit: "oz", storeSection: "meat" },
       { name: "Salt", qtyPerServing: null, unit: "pantry", storeSection: "pantry" },
@@ -158,6 +164,8 @@ export const dishes: Dish[] = [
     nameZh: "红烧鸡腿",
     category: "meat",
     ratioSource: "stubbed", // TODO(Jessie): real ratios from Master Recipes
+    blurb:
+      "4 servings of red-braised chicken drumsticks, slow-simmered with potato, cabbage, and glass noodles until fall-off-the-bone tender! A cozy, homestyle favorite.",
     ingredients: [
       { name: "Chicken drumsticks", qtyPerServing: 2, unit: "ct", storeSection: "meat" },
       { name: "Potato", qtyPerServing: 0.25, unit: "lb", storeSection: "produce" },
@@ -193,6 +201,8 @@ export const dishes: Dish[] = [
     nameZh: "炒青菜",
     category: "veggie",
     ratioSource: "transcribed", // Master Recipes "Vegetable Stir-fries": 1⅓ lb per 4 orders
+    blurb:
+      "4 servings of fresh stir-fried bok choy! Quick-cooked with garlic to keep it crisp-tender — a simple, clean side that balances out the richer dishes.",
     ingredients: [
       { name: "Bok choy", qtyPerServing: 0.33, unit: "lb", storeSection: "produce" },
       { name: "Garlic", qtyPerServing: 0.5, unit: "ct", storeSection: "produce" },
@@ -212,6 +222,8 @@ export const dishes: Dish[] = [
     name: "Stir-fried broccoli",
     category: "veggie",
     ratioSource: "stubbed", // TODO(Jessie): real ratios (stub mirrors bok choy)
+    blurb:
+      "4 servings of garlicky stir-fried broccoli! Bright, crisp-tender florets tossed with garlic — a simple veggie side that pairs with any box.",
     ingredients: [
       { name: "Broccoli", qtyPerServing: 0.33, unit: "lb", storeSection: "produce" },
       { name: "Garlic", qtyPerServing: 0.5, unit: "ct", storeSection: "produce" },
@@ -229,6 +241,8 @@ export const dishes: Dish[] = [
     nameZh: "干煸四季豆",
     category: "veggie",
     ratioSource: "stubbed", // TODO(Jessie): real ratios
+    blurb:
+      "4 servings of dry-fried Sichuan green beans! Blistered until slightly wrinkled, then tossed with garlic, dried chili, and Sichuan peppercorn for a smoky, numbing kick.",
     ingredients: [
       { name: "Green beans", qtyPerServing: 0.33, unit: "lb", storeSection: "produce" },
       { name: "Garlic", qtyPerServing: 0.75, unit: "ct", storeSection: "produce" },
@@ -247,6 +261,8 @@ export const dishes: Dish[] = [
     nameZh: "土豆丝",
     category: "veggie",
     ratioSource: "stubbed", // TODO(Jessie): real ratios
+    blurb:
+      "4 servings of tu dou si — julienned potato stir-fried until just tender-crisp, finished with dried chili and a splash of black vinegar for tang.",
     ingredients: [
       { name: "Potato", qtyPerServing: 0.4, unit: "lb", storeSection: "produce" },
       { name: "Dried chili", qtyPerServing: null, unit: "pantry", storeSection: "pantry" },
@@ -264,6 +280,8 @@ export const dishes: Dish[] = [
     nameZh: "番茄炒蛋",
     category: "veggie",
     ratioSource: "stubbed", // TODO(Jessie): real ratios
+    blurb:
+      "4 servings of tomato egg stir-fry, a Chinese home-cooking classic! Soft scrambled eggs folded into sweet-savory stewed tomatoes — comforting and nostalgic.",
     ingredients: [
       { name: "Eggs", qtyPerServing: 1.5, unit: "ct", storeSection: "dairy" },
       { name: "Tomato", qtyPerServing: 0.5, unit: "lb", storeSection: "produce" },
@@ -284,6 +302,7 @@ export const dishes: Dish[] = [
     name: "White rice",
     category: "rice",
     ratioSource: "stubbed", // TODO(Jessie): confirm per-serving cups
+    blurb: "Fluffy steamed white rice, cooked fresh to order — the simple, essential base for your box.",
     ingredients: [{ name: "White rice", qtyPerServing: 0.5, unit: "cup", storeSection: "pantry" }],
     steps: ["Measure rice into rice cooker.", "Wash 2×.", "Cook on standard setting."],
     prepNotes: [],
@@ -296,6 +315,7 @@ export const dishes: Dish[] = [
     name: "Brown rice (mixed)",
     category: "rice",
     ratioSource: "transcribed", // July 20 ops sheet: 1 cup white + 1 cup brown ≈ 3.5 servings
+    blurb: "A nutty blend of white and brown rice, soaked overnight and steamed until fluffy — a heartier, whole-grain base for your box.",
     ingredients: [
       { name: "White rice", qtyPerServing: 0.29, unit: "cup", storeSection: "pantry" },
       { name: "Brown rice", qtyPerServing: 0.29, unit: "cup", storeSection: "pantry" },
@@ -319,6 +339,8 @@ export const dishes: Dish[] = [
     name: "ABC chicken noodle soup",
     category: "soup",
     ratioSource: "transcribed", // Master Recipes, per 32 oz container
+    blurb:
+      "A comforting 32oz container of ABC chicken noodle soup! Shredded chicken, farfalle pasta, and vegetables simmered in a savory broth with goji berries and jujube — a nourishing classic.",
     ingredients: [
       { name: "Chicken (whole, shredded)", qtyPerServing: 4, unit: "oz", storeSection: "meat" },
       { name: "Farfalle pasta", qtyPerServing: 2.75, unit: "oz", storeSection: "pantry" },
@@ -353,6 +375,8 @@ export const dishes: Dish[] = [
     nameZh: "排骨汤",
     category: "soup",
     ratioSource: "transcribed", // Master Recipes, per 32 oz container
+    blurb:
+      "A hearty 32oz container of pork rib soup with corn, carrot, and daikon! Slow-simmered for over an hour until the broth turns rich and comforting.",
     ingredients: [
       { name: "Pork ribs", qtyPerServing: 5, unit: "oz", storeSection: "meat" },
       { name: "Fresh sweet corn", qtyPerServing: 2.5, unit: "oz", storeSection: "produce" },
